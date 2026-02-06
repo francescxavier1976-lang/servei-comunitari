@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teresa - Una vida</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #1a1a1a;
+            color: #f5f5f5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 40px;
+            padding-top: 30px;
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+            overflow-y: auto;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .intro-screen {
+            background: linear-gradient(135deg, #2c1810 0%, #1a1a1a 100%);
+        }
+
+        .intro-screen h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #d4a574;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .intro-screen h2 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #a0a0a0;
+            font-weight: normal;
+        }
+
+        .intro-screen p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #c0c0c0;
+        }
+
+        .start-btn {
+            margin-top: 30px;
+            padding: 18px 50px;
+            font-size: 1.2rem;
+            background: #d4a574;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        .start-btn:hover {
+            background: #e6b885;
+            transform: scale(1.05);
+        }
+
+        .narrative-screen {
+            background: #1a1a1a;
+        }
+
+        .media-container {
+            width: 50vw;
+            max-width: 600px;
+            max-height: 45vh;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .media-container img,
+        .media-container video {
+            width: 100%;
+            height: auto;
+            max-height: 45vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .narrative-text {
+            max-width: 700px;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .age-indicator {
+            font-size: 1rem;
+            color: #d4a574;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        .decision-screen {
+            background: linear-gradient(180deg, #1a1a1a 0%, #2c1810 100%);
+        }
+
+        .decision-text {
+            max-width: 700px;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #f5f5f5;
+            margin-bottom: 25px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            font-size: 1rem;
+            background: rgba(212, 165, 116, 0.1);
+            color: #d4a574;
+            border: 2px solid #d4a574;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background: rgba(212, 165, 116, 0.3);
+            transform: translateX(10px);
+        }
+
+        .option-btn span {
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .consequence-screen {
+            background: #1a1a1a;
+        }
+
+        .consequence-text {
+            max-width: 700px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            padding: 25px;
+            background: rgba(212, 165, 116, 0.1);
+            border-left: 4px solid #d4a574;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+        }
+
+        .continue-btn {
+            margin-top: 20px;
+            padding: 12px 35px;
+            font-size: 1rem;
+            background: transparent;
+            color: #d4a574;
+            border: 2px solid #d4a574;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        .continue-btn:hover {
+            background: #d4a574;
+            color: #1a1a1a;
+        }
+
+        .tree-screen {
+            background: linear-gradient(135deg, #2c1810 0%, #1a1a1a 100%);
+        }
+
+        .tree-container {
+            width: 80vw;
+            max-width: 900px;
+            margin-bottom: 25px;
+        }
+
+        .tree-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+        }
+
+        .tree-text {
+            max-width: 700px;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #e0e0e0;
+        }
+
+        .final-screen {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c1810 100%);
+        }
+
+        .final-screen h2 {
+            font-size: 2rem;
+            color: #d4a574;
+            margin-bottom: 25px;
+        }
+
+        .final-text {
+            max-width: 700px;
+            font-size: 1.2rem;
+            line-height: 1.9;
+            color: #e0e0e0;
+        }
+
+        .highlight {
+            color: #d4a574;
+            font-weight: bold;
+        }
+
+        .revelation-box {
+            margin-top: 25px;
+            padding: 25px;
+            background: rgba(212, 165, 116, 0.15);
+            border: 2px solid #d4a574;
+            border-radius: 15px;
+            max-width: 650px;
+        }
+
+        .revelation-box h3 {
+            color: #d4a574;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .revelation-box p {
+            color: #c0c0c0;
+            line-height: 1.7;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: #d4a574;
+            transition: width 0.5s ease;
+            z-index: 100;
+        }
+
+        .instructions {
+            position: fixed;
+            bottom: 15px;
+            right: 20px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .intro-screen h1 { font-size: 2rem; }
+            .narrative-text, .decision-text { font-size: 1rem; }
+            .media-container { width: 90vw; }
+            .screen { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- PANTALLA 0: Introducció -->
+    <div class="screen intro-screen active" id="screen0">
+        <h1>Gent Jove, Gent Gran</h1>
+        <h2>Servei Comunitari · INS Flix</h2>
+        <p>Durant les properes setmanes, visitareu la <strong>Residència de gent gran d'Ascó</strong>.</p>
+        <p>Però abans, heu de viure una experiència.</p>
+        <p class="highlight">Avui sereu la Teresa. Les decisions seran vostres.</p>
+        <button class="start-btn" onclick="nextScreen()">Començar</button>
+    </div>
+
+    <!-- PANTALLA 1: Introducció al poble -->
+    <div class="screen narrative-screen" id="screen1">
+        <div class="age-indicator">RIBA-ROJA D'EBRE</div>
+        <div class="media-container">
+            <img src="poble.jpg" alt="El poble">
+        </div>
+        <p class="narrative-text">
+            Un poble petit vora el riu Ebre. Cases de pedra, carrers estrets, camps d'oliveres.
+            Aquí és on comença la teva història. Aquí és on neixes.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 2: Teresa neix (1941) -->
+    <div class="screen narrative-screen" id="screen2">
+        <div class="age-indicator">1941 · NEIXES</div>
+        <div class="media-container">
+            <img src="01.jpg" alt="Teresa nadó">
+        </div>
+        <p class="narrative-text">
+            Neixes a Riba-roja d'Ebre. La guerra ha acabat fa poc, i tot és difícil. 
+            Però la teva mare et mira amb ulls plens d'amor. "Serà forta, aquesta nena", diu.
+            El teu pare, jornaler, somriu per primera vegada en setmanes.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 3: Teresa 6 anys (1947) -->
+    <div class="screen narrative-screen" id="screen3">
+        <div class="age-indicator">1947 · TENS 6 ANYS</div>
+        <div class="media-container">
+            <img src="02.jpg" alt="Teresa a l'escola">
+        </div>
+        <p class="narrative-text">
+            Comences l'escola del poble. T'encanta! La mestra diu que ets llesta, que aprens de pressa.
+            Els estius són al riu amb els altres nens, banyant-vos, rient. 
+            La vida és senzilla, però tens el que importa: família, amics, i ganes de créixer.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 4: El riu -->
+    <div class="screen narrative-screen" id="screen4">
+        <div class="age-indicator">EL RIU</div>
+        <div class="media-container">
+            <img src="riu.jpg" alt="El riu Ebre">
+        </div>
+        <p class="narrative-text">
+            El riu Ebre. És el cor del poble. A l'estiu hi vas a banyar-te, a l'hivern el mires des de la finestra.
+            El riu sempre hi és. Com la família. Com la vida que et passa per davant.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 5: DECISIÓ 1 - 12 anys (1953) -->
+    <div class="screen decision-screen" id="screen5">
+        <div class="age-indicator">1953 · TENS 12 ANYS</div>
+        <div class="media-container">
+            <video src="decisio.mp4" autoplay loop muted playsinline></video>
+        </div>
+        <p class="decision-text">
+            El teu pare et crida. "L'escola s'ha acabat", diu. "Has de treballar."<br><br>
+            T'agradaria seguir estudiant, però a casa necessiten diners.
+            A la comarca hi ha dues opcions: la fàbrica de Flix o anar a Barcelona a servir.<br><br>
+            <strong>Què tries?</strong>
+        </p>
+        <div class="options-container">
+            <button class="option-btn" onclick="makeDecision(1, 'A')">
+                <span>A)</span> La fàbrica. És dur, però estaré a prop de casa, de la mare, de les amigues.
+            </button>
+            <button class="option-btn" onclick="makeDecision(1, 'B')">
+                <span>B)</span> Barcelona. Potser allà puc aprendre coses noves, veure món.
+            </button>
+            <button class="option-btn" onclick="makeDecision(1, 'C')">
+                <span>C)</span> Demano un any més d'escola. Potser la mestra pot convèncer el pare.
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 5B: Conseqüència decisió 1 -->
+    <div class="screen consequence-screen" id="screen5b">
+        <div class="age-indicator">EL TEU CAMÍ</div>
+        <div class="media-container">
+            <img src="fabrica.jpg" alt="Conseqüència" id="img_consequence1">
+        </div>
+        <p class="consequence-text" id="consequence1"></p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 6: Teresa 19 anys (1960) -->
+    <div class="screen narrative-screen" id="screen6">
+        <div class="age-indicator">1960 · TENS 19 ANYS</div>
+        <div class="media-container">
+            <img src="teresa_19_festa.jpg" alt="Teresa jove a la festa major">
+        </div>
+        <p class="narrative-text" id="text_19anys">
+            Han passat uns anys. Ara ets una dona jove, al poble, amb tota la vida per endavant.
+            Els diumenges vas al riu amb les amigues, els dissabtes a ballar a la festa major.
+            Un noi et mira. Es diu Josep. Té uns ulls amables i et fa riure.
+            "Amb tu em sento bé", et diu un vespre d'estiu.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 7: DECISIÓ 2 - Casament (1965) -->
+    <div class="screen decision-screen" id="screen7">
+        <div class="age-indicator">1965 · TENS 24 ANYS</div>
+        <div class="media-container">
+            <img src="04.jpg" alt="Teresa casament">
+        </div>
+        <p class="decision-text">
+            El Josep t'ha demanat de casar-vos. L'estimes, però tens dubtes. Ets jove!
+            Una amiga t'ha parlat d'una feina a Tarragona. Podries ser independent...<br><br>
+            <strong>Què tries?</strong>
+        </p>
+        <div class="options-container">
+            <button class="option-btn" onclick="makeDecision(2, 'A')">
+                <span>A)</span> Em caso amb el Josep. L'estimo, i vull construir una vida amb ell.
+            </button>
+            <button class="option-btn" onclick="makeDecision(2, 'B')">
+                <span>B)</span> Li demano que esperem. Encara soc jove, vull viure més experiències.
+            </button>
+            <button class="option-btn" onclick="makeDecision(2, 'C')">
+                <span>C)</span> Marxo a Tarragona. Necessito descobrir qui soc abans de comprometre'm.
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 7B: Conseqüència decisió 2 -->
+    <div class="screen consequence-screen" id="screen7b">
+        <div class="age-indicator">EL TEU CAMÍ</div>
+        <div class="media-container">
+            <img src="04.jpg" alt="Conseqüència" id="img_consequence2">
+        </div>
+        <p class="consequence-text" id="consequence2"></p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 8: Teresa 34 anys (1975) -->
+    <div class="screen narrative-screen" id="screen8">
+        <div class="age-indicator">1975 · TENS 34 ANYS</div>
+        <div class="media-container">
+            <img src="05.jpg" alt="Teresa amb els fills">
+        </div>
+        <p class="narrative-text">
+            Tens dos fills: en Jordi i la Maria. La casa és petita però plena de vida.
+            El Josep és un bon home. Treballeu molt, però els vespres sopeu junts, 
+            i els caps de setmana aneu al riu, com quan éreu joves.
+            Franco acaba de morir. A la tele parlen de canvis. 
+            Mires els teus fills i somrius: ells tindran més oportunitats que tu.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 9: DECISIÓ 3 - Els fills marxen (1990) -->
+    <div class="screen decision-screen" id="screen9">
+        <div class="age-indicator">1990 · TENS 49 ANYS</div>
+        <div class="media-container">
+            <img src="06.jpg" alt="Teresa acomiadant el fill">
+        </div>
+        <p class="decision-text">
+            Els fills ja són grans. Han estudiat —tu, que vas deixar l'escola als 12, has criat universitaris!
+            Volen marxar a la ciutat: Barcelona, Tarragona... Allà hi ha més futur.<br><br>
+            T'omple d'orgull, però també de tristesa. La casa quedarà buida.<br><br>
+            <strong>Què els dius?</strong>
+        </p>
+        <div class="options-container">
+            <button class="option-btn" onclick="makeDecision(3, 'A')">
+                <span>A)</span> "Voleu, fills, voleu. Estigueu orgullosos del que aconseguiu."
+            </button>
+            <button class="option-btn" onclick="makeDecision(3, 'B')">
+                <span>B)</span> "Marxeu, però veniu sovint. Casa vostra sempre serà aquí."
+            </button>
+            <button class="option-btn" onclick="makeDecision(3, 'C')">
+                <span>C)</span> "I si vinguéssim amb vosaltres? Podríem començar de nou."
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 9B: Conseqüència decisió 3 -->
+    <div class="screen consequence-screen" id="screen9b">
+        <div class="age-indicator">EL TEU CAMÍ</div>
+        <div class="media-container">
+            <img src="06.jpg" alt="Conseqüència" id="img_consequence3">
+        </div>
+        <p class="consequence-text" id="consequence3"></p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 10: Teresa 69 anys (2010) -->
+    <div class="screen narrative-screen" id="screen10">
+        <div class="age-indicator">2010 · TENS 69 ANYS</div>
+        <div class="media-container">
+            <img src="07.jpg" alt="Teresa i Josep" id="img_jubilacio">
+        </div>
+        <p class="narrative-text" id="text_jubilacio">
+            Esteu jubilats. Per fi teniu temps per a vosaltres.
+            Passegeu vora el riu agafats de la mà, com quan éreu joves.
+            Els néts venen per Nadal i l'estiu. La casa torna a omplir-se de rialles.
+            Una tarda, el Josep et mira i diu: "Hem tingut una bona vida, oi?"
+            Li agafes la mà. "La millor", li respons.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 11: DECISIÓ 4 - Vídua (2019) -->
+    <div class="screen decision-screen" id="screen11">
+        <div class="age-indicator">2019 · TENS 78 ANYS</div>
+        <div class="media-container">
+            <video src="vidua.mp4" autoplay loop muted playsinline></video>
+        </div>
+        <p class="decision-text">
+            El Josep ha mort. 54 anys junts. 
+            Ara la cadira on seia és buida. Però quan tanques els ulls, el sents encara.<br><br>
+            Els fills es preocupen. Però tu tens les teves coses, els teus records.<br><br>
+            <strong>Què fas?</strong>
+        </p>
+        <div class="options-container">
+            <button class="option-btn" onclick="makeDecision(4, 'A')">
+                <span>A)</span> Em quedo a casa. Aquí tinc els records, les veïnes, la meva vida.
+            </button>
+            <button class="option-btn" onclick="makeDecision(4, 'B')">
+                <span>B)</span> Vaig amb els fills una temporada. Necessito companyia ara.
+            </button>
+            <button class="option-btn" onclick="makeDecision(4, 'C')">
+                <span>C)</span> Busco fer coses noves: el centre cívic, activitats. No vull aturar-me.
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 11B: Conseqüència decisió 4 -->
+    <div class="screen consequence-screen" id="screen11b">
+        <div class="age-indicator">EL TEU CAMÍ</div>
+        <div class="media-container">
+            <img src="casapropia.jpg" alt="Conseqüència" id="img_consequence4">
+        </div>
+        <p class="consequence-text" id="consequence4"></p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 12: Pandèmia (2020) -->
+    <div class="screen narrative-screen" id="screen12">
+        <div class="age-indicator">2020 · TENS 79 ANYS</div>
+        <div class="media-container">
+            <video src="pandemia.mp4" autoplay loop muted playsinline></video>
+        </div>
+        <p class="narrative-text">
+            La pandèmia. No pots sortir, els fills no poden venir.
+            Però cada tarda, la néta et truca per videotrucada.
+            "Iaia, t'estimo!", et diu. I tu somrius.
+            El món s'ha aturat, però l'amor no. Mai no s'atura.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 13: DECISIÓ 5 - Residència (2024) -->
+    <div class="screen decision-screen" id="screen13">
+        <div class="age-indicator">2024 · TENS 83 ANYS</div>
+        <div class="media-container">
+            <img src="decisio_residencia.jpg" alt="Teresa parlant amb el fill">
+        </div>
+        <p class="decision-text">
+            Has caigut dues vegades. El metge diu que viure sola és perillós.
+            Els fills et parlen de la residència d'Ascó. "Hi ha gent, activitats..."<br><br>
+            No és fàcil deixar casa teva. Però potser és hora d'una nova etapa.<br><br>
+            <strong>Què decideixes?</strong>
+        </p>
+        <div class="options-container">
+            <button class="option-btn" onclick="makeDecision(5, 'A')">
+                <span>A)</span> Hi vaig. Potser faré amigues noves. Una nova aventura als 83!
+            </button>
+            <button class="option-btn" onclick="makeDecision(5, 'B')">
+                <span>B)</span> Hi vaig, però amb condicions: vull poder sortir i rebre visites quan vulgui.
+            </button>
+            <button class="option-btn" onclick="makeDecision(5, 'C')">
+                <span>C)</span> Costa molt, però finalment accepto. Els fills tenen raó.
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 13B: Conseqüència decisió 5 -->
+    <div class="screen consequence-screen" id="screen13b">
+        <div class="age-indicator">EL TEU CAMÍ</div>
+        <div class="media-container">
+            <img src="08.jpg" alt="Residència" id="img_consequence5">
+        </div>
+        <p class="consequence-text" id="consequence5"></p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 14: Avui (2026) -->
+    <div class="screen narrative-screen" id="screen14">
+        <div class="age-indicator">2026 · TENS 85 ANYS</div>
+        <div class="media-container">
+            <video src="Final.mp4" autoplay loop muted playsinline></video>
+        </div>
+        <p class="narrative-text">
+            Avui t'han dit que vindran uns joves de l'institut.
+            T'arregles la brusa, et mires al mirall.
+            85 anys et miren. Però dins teu hi ha la nena del riu, la jove que ballava,
+            la mare, l'àvia... Tota una vida.
+            I ara, algú vol escoltar-la.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 15: L'arbre -->
+    <div class="screen tree-screen" id="screen15">
+        <h2 style="color: #d4a574; margin-bottom: 15px;">L'arbre d'una vida</h2>
+        <div class="tree-container">
+            <img src="arbre.jpg" alt="L'arbre de decisions">
+        </div>
+        <p class="tree-text">
+            Cada decisió que has pres ha dibuixat un camí.
+            A cada cruïlla, hi havia altres branques possibles. Altres vides.
+        </p>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 16: Revelació -->
+    <div class="screen final-screen" id="screen16">
+        <h2>Una vida de veritat</h2>
+        <p class="final-text">
+            Acabeu de viure la vida de la <span class="highlight">Teresa</span>.<br><br>
+            Una dona que podria existir. Una vida que podria ser real.
+        </p>
+        <div class="revelation-box">
+            <h3>El que heu sentit és important</h3>
+            <p>
+                Cada vegada que heu triat, heu sentit el pes de decidir.<br><br>
+                Les persones grans que visitareu van prendre decisions com aquestes.
+                De veritat. Sense tornar enrere. Sense saber com acabaria tot.<br><br>
+                I ara, al final del camí, tenen una vida sencera per explicar.
+            </p>
+        </div>
+        <button class="continue-btn" onclick="nextScreen()">Continuar →</button>
+    </div>
+
+    <!-- PANTALLA 17: Final -->
+    <div class="screen final-screen" id="screen17">
+        <h2>Quan aneu a la residència...</h2>
+        <p class="final-text">
+            No veureu "avis" o "gent gran".<br><br>
+            Veureu <span class="highlight">Tereses</span>. <span class="highlight">Joseps</span>. 
+            <span class="highlight">Maries</span>. <span class="highlight">Jordis</span>.<br><br>
+            Persones amb 80, 85, 90 anys de vida.<br>
+            Amb històries d'amor, de pèrdua, d'alegria, de lluita.<br><br>
+            Pregunteu-los. Escolteu-los.
+        </p>
+        <p class="highlight" style="font-size: 1.4rem; margin-top: 30px;">
+            "Què li agradaria explicar-me de la seva vida?"
+        </p>
+        <button class="start-btn" style="margin-top: 35px;" onclick="location.reload()">
+            Tornar a començar
+        </button>
+    </div>
+
+    <div class="instructions">
+        INS Flix · Servei Comunitari 2025-26
+    </div>
+
+    <script>
+        let currentScreen = 0;
+        const decisions = {};
+        
+        // CONSEQÜÈNCIES amb imatges associades
+        const consequences = {
+            1: {
+                'A': {
+                    text: "Comences a la fàbrica. És dur, sí: les jornades són llargues, la pudor dels químics s'enganxa a la roba. Però fas amigues: la Maria, la Pepita, la Rosa. Cada dia dineu juntes i rieu. Els caps de setmana passegeu pel poble, aneu al riu, balleu a les festes. No és la vida que havies somiat, però hi trobes alegries que no esperaves.",
+                    img: "fabrica.jpg"
+                },
+                'B': {
+                    text: "Marxes a Barcelona. El tren és llarg, i quan arribes a Plaça Catalunya amb la teva maleta de cartró, et sents molt petita. La ciutat és immensa, t'espanta i et fascina. Aprens a servir a casa de senyors, a cuinar plats nous, a parlar amb gent diferent. Enyores el riu, la mare. Però quan tornes, anys després, portes un món dins teu que ningú et pot prendre.",
+                    img: "sola_a_barcelona.jpg"
+                },
+                'C': {
+                    text: "La mestra parla amb el teu pare. Li explica que ets llesta, que mereixes una oportunitat. El pare dubta... i finalment accepta uns mesos més. Aprens tot el que pots, com si fos un tresor. Aquells mesos extres et canvien per sempre. Després, sí, a treballar, però amb més eines dins el cap.",
+                    img: "02.jpg"
+                }
+            },
+            2: {
+                'A': {
+                    text: "Et cases amb el Josep. El dia del casament, quan et mira als ulls a l'església, saps que has triat bé. No és passió de pel·lícula, és alguna cosa millor: un company de vida. Algú que et fa riure, que et cuida, que et respecta. Amb qui construiràs una família.",
+                    img: "04.jpg"
+                },
+                'B': {
+                    text: "Li demanes temps. Ell s'entristeix, però espera. Passes uns mesos vivint, pensant, decidint. I al final, tornes amb ell. Perquè l'amor no és només foc, també és calma. I amb el Josep tens les dues coses. Us caseu un any més tard, però més segurs que mai.",
+                    img: "04.jpg"
+                },
+                'C': {
+                    text: "Marxes a Tarragona. Treballes en una botiga, vius sola per primera vegada, descobreixes qui ets. El mar et fascina —tu, que només coneixies el riu! Però el Josep et segueix escrivint cartes. I un dia, tornes. Perquè de vegades cal allunyar-se per saber on és casa teva.",
+                    img: "noiatarragona.jpg"
+                }
+            },
+            3: {
+                'A': {
+                    text: "\"Voleu, fills, voleu\", els dius amb un somriure. Plores quan marxen, però també sents orgull. Els has donat ales. I cada vegada que truquen emocionats per explicar-te les seves vides, saps que ho vas fer bé. Has criat fills que volen volar, i això és el millor regal.",
+                    img: "06.jpg"
+                },
+                'B': {
+                    text: "\"Veniu sovint\", els dius. I ho fan. Cada festa major, cada Nadal, cada aniversari. La casa no està mai buida del tot, perquè sempre hi ha algú a punt d'arribar. O el record de l'última visita. La família es manté unida, malgrat la distància.",
+                    img: "06.jpg"
+                },
+                'C': {
+                    text: "Proveu la ciutat una temporada. El pis és petit, el soroll és constant, tot és diferent. Al final, torneu al poble —necessiteu el riu, l'aire, el silenci. Però aquells mesos us apropen als fills d'una manera nova. Ara enteneu millor les seves vides.",
+                    img: "ciutatgran.jpg"
+                }
+            },
+            4: {
+                'A': {
+                    text: "Et quedes a casa. Les veïnes et visiten, la néta et truca cada dia. Tens els teus records, les teves coses, el teu ritme. Quan mires per la finestra el carrer on has viscut tota la vida, sents que pertanys. Que aquest és el teu lloc. El Josep és a cada racó.",
+                    img: "vidua_casa.jpg"
+                },
+                'B': {
+                    text: "Passes uns mesos amb els fills. Jugues amb els néts, coneixes les seves vides de prop. Són mesos intensos, plens. Després tornes a casa, però ara amb records nous. I amb la certesa que, passi el que passi, tens família que t'estima.",
+                    img: "ciutatgran.jpg"
+                },
+                'C': {
+                    text: "T'apuntes al centre cívic. Fas gimnàstica, aprens a fer servir el mòbil, participes en un cor. Fas amigues noves als 78 anys! \"Mai és tard per viure\", et dius cada matí. I ho creus de veritat. El Josep estaria orgullós.",
+                    img: "centrecivic.jpg"
+                }
+            },
+            5: {
+                'A': {
+                    text: "Vas a la residència amb curiositat, no amb por. El primer dia estàs nerviosa, però aviat fas amigues: la Carme, la Pilar, la Montse. Jugeu a cartes, xerreu de tot, us queixeu juntes dels metges i rieu. No és casa teva, però t'hi vas fent. La vida continua.",
+                    img: "08.jpg"
+                },
+                'B': {
+                    text: "Hi vas amb les teves condicions: vols poder sortir, passejar, veure el riu quan vulguis. I ho aconsegueixes. La residència és la teva base, però segueixes sent lliure. Com sempre has volgut ser. Ningú et treu la llibertat.",
+                    img: "08.jpg"
+                },
+                'C': {
+                    text: "Costa molt acceptar-ho. Plores, t'enfades, ho negues. Però al final, entens que els fills tenen raó: no pots viure sola. El primer mes és dur. El segon, menys. El tercer, ja tens amigues i rutines. La vida s'adapta. Tu t'adaptes.",
+                    img: "08.jpg"
+                }
+            }
+        };
+
+        const screenMap = [
+            'screen0', 'screen1', 'screen2', 'screen3', 'screen4',
+            'screen5', 'screen5b',
+            'screen6', 'screen7', 'screen7b',
+            'screen8', 'screen9', 'screen9b',
+            'screen10', 'screen11', 'screen11b',
+            'screen12', 'screen13', 'screen13b',
+            'screen14', 'screen15', 'screen16', 'screen17'
+        ];
+
+        function getScreenId(num) {
+            return screenMap[num] || 'screen' + num;
+        }
+
+        function nextScreen() {
+            const currentScreenId = getScreenId(currentScreen);
+            document.getElementById(currentScreenId).classList.remove('active');
+            currentScreen++;
+            
+            const nextScreenId = getScreenId(currentScreen);
+            document.getElementById(nextScreenId).classList.add('active');
+            
+            // Actualitzar contingut dinàmic segons decisions anteriors
+            updateDynamicContent();
+            
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function makeDecision(decisionNum, choice) {
+            decisions[decisionNum] = choice;
+            
+            const consequence = consequences[decisionNum][choice];
+            document.getElementById('consequence' + decisionNum).textContent = consequence.text;
+            document.getElementById('img_consequence' + decisionNum).src = consequence.img;
+            
+            nextScreen();
+        }
+
+        function updateDynamicContent() {
+            // Si han triat Barcelona (1B), actualitzar el text dels 19 anys
+            if (decisions[1] === 'B' && document.getElementById('text_19anys')) {
+                document.getElementById('text_19anys').innerHTML = 
+                    "Han passat uns anys. Vas estar a Barcelona, vas veure món, però al final vas tornar. " +
+                    "Ara ets una dona jove, al poble, amb tota la vida per endavant. " +
+                    "Un noi et mira. Es diu Josep. Té uns ulls amables i et fa riure. " +
+                    "\"Amb tu em sento bé\", et diu un vespre d'estiu.";
+            }
+            
+            // Si han triat Tarragona (2C), actualitzar si cal
+            if (decisions[2] === 'C' && document.getElementById('text_19anys')) {
+                // El text ja s'actualitza a la conseqüència
+            }
+
+            // Si han triat marxar a la ciutat (3C), actualitzar la pantalla de jubilació
+            if (decisions[3] === 'C' && document.getElementById('img_jubilacio')) {
+                document.getElementById('img_jubilacio').src = 'ciutatgran.jpg';
+                document.getElementById('text_jubilacio').innerHTML = 
+                    "Vau provar la ciutat, però al final vau tornar al poble. " +
+                    "Ara esteu jubilats. Per fi teniu temps per a vosaltres. " +
+                    "Passegeu vora el riu agafats de la mà, com quan éreu joves. " +
+                    "Els néts venen per Nadal i l'estiu. La casa torna a omplir-se de rialles. " +
+                    "Una tarda, el Josep et mira i diu: \"Hem tingut una bona vida, oi?\" " +
+                    "Li agafes la mà. \"La millor\", li respons.";
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentScreen / (screenMap.length - 1)) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        updateProgress();
+    </script>
+</body>
+</html>
