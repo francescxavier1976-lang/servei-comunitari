@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Guia de Creació del Guió — Còmic de la Residència</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+        }
+        .header .emoji-big { font-size: 2.5em; margin-bottom: 10px; }
+        .header h1 { font-size: 2em; margin-bottom: 6px; color: #e94560; }
+        .header .subtitle { font-size: 1.05em; opacity: 0.7; margin-bottom: 15px; }
+        .header .badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 0.85em; margin: 3px; }
+        .badge-sc { background: rgba(233,69,96,0.3); color: #ff8fa3; }
+        .badge-comic { background: rgba(76,175,80,0.3); color: #81c784; }
+
+        /* INTRO BOX */
+        .intro-box {
+            background: rgba(41,128,185,0.15);
+            border-left: 4px solid #2980b9;
+            padding: 18px 22px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        .intro-box strong { color: #5dade2; }
+
+        /* GROUP SELECTOR */
+        .group-selector {
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .group-selector h2 { color: #e94560; font-size: 1.3em; margin-bottom: 15px; }
+        .group-selector label { font-size: 0.95em; opacity: 0.8; display: block; margin-bottom: 8px; }
+        .group-input {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(233,69,96,0.4);
+            border-radius: 10px;
+            color: #fff;
+            padding: 10px 16px;
+            font-size: 1em;
+            width: 100%;
+            max-width: 400px;
+            margin: 5px auto;
+            display: block;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        .group-input:focus { outline: none; border-color: #e94560; background: rgba(255,255,255,0.15); }
+        .group-input::placeholder { color: rgba(255,255,255,0.35); }
+        .group-btns { margin-top: 12px; }
+        .group-btn {
+            display: inline-block;
+            padding: 10px 28px;
+            border-radius: 25px;
+            border: 2px solid rgba(233,69,96,0.5);
+            background: transparent;
+            color: #ff8fa3;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        .group-btn:hover, .group-btn.active {
+            background: #e94560;
+            color: #fff;
+            border-color: #e94560;
+        }
+
+        /* PROGRESS BAR */
+        .progress-bar {
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            padding: 18px 25px;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar h3 { font-size: 0.9em; color: #aaa; margin-bottom: 10px; }
+        .progress-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #27ae60);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        .progress-text { font-size: 0.8em; opacity: 0.6; margin-top: 6px; text-align: right; }
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+        .progress-step {
+            font-size: 0.7em;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+        .progress-step:hover { opacity: 0.8; }
+        .progress-step.active { opacity: 1; color: #e94560; font-weight: bold; }
+        .progress-step.completed { opacity: 1; color: #27ae60; }
+
+        /* SECTIONS */
+        .section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            padding: 28px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        .section.visible { display: block; }
+        .section h2 {
+            color: #e94560;
+            font-size: 1.5em;
+            margin-bottom: 8px;
+            border-bottom: 2px solid rgba(233,69,96,0.3);
+            padding-bottom: 10px;
+        }
+        .section .section-intro {
+            font-style: italic;
+            opacity: 0.7;
+            margin-bottom: 22px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* SUBSECTION */
+        .subsection {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .subsection:first-of-type { border-top: none; margin-top: 10px; padding-top: 0; }
+        .subsection h3 {
+            font-size: 1.15em;
+            margin-bottom: 15px;
+        }
+        .sub-jove h3 { color: #5dade2; }
+        .sub-gran h3 { color: #27ae60; }
+
+        /* QUESTION BLOCKS */
+        .question-block {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-left: 4px solid #2980b9;
+            transition: border-color 0.3s;
+        }
+        .question-block.answered { border-left-color: #27ae60; }
+        .question-block .q-number {
+            display: inline-block;
+            background: #2980b9;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+        .question-block.answered .q-number { background: #27ae60; }
+        .question-block .q-text {
+            font-weight: bold;
+            font-size: 1em;
+            color: #eee;
+            display: inline;
+        }
+        .question-block .q-help {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.88em;
+            color: #aaa;
+            font-style: italic;
+            line-height: 1.5;
+        }
+        .question-block textarea {
+            width: 100%;
+            margin-top: 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: #fff;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 0.95em;
+            line-height: 1.5;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.3s;
+        }
+        .question-block textarea:focus {
+            outline: none;
+            border-color: #2980b9;
+            background: rgba(255,255,255,0.12);
+        }
+        .question-block textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+        /* VINYETA HEADERS */
+        .vinyeta-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .vinyeta-header .v-num {
+            background: #e94560;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            flex-shrink: 0;
+        }
+        .vinyeta-header .v-title { font-size: 1.1em; color: #f0e68c; font-weight: bold; }
+        .vinyeta-header .v-subtitle { font-size: 0.85em; opacity: 0.6; margin-top: 2px; }
+
+        /* TIP BOX */
+        .tip-box {
+            background: rgba(243,156,18,0.12);
+            border-left: 4px solid #f39c12;
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            margin: 18px 0;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #f5d76e;
+        }
+        .tip-box.green {
+            background: rgba(39,174,96,0.12);
+            border-left-color: #27ae60;
+            color: #82e0aa;
+        }
+
+        /* CHECKLIST */
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .checklist-item:hover { opacity: 0.9; }
+        .checklist-item .check-box {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #27ae60;
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            transition: all 0.3s;
+            font-size: 0.8em;
+        }
+        .checklist-item.checked .check-box {
+            background: #27ae60;
+            color: #fff;
+        }
+        .checklist-item .check-text { font-size: 0.95em; line-height: 1.5; }
+
+        /* NAVIGATION */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+        .nav-btn {
+            padding: 12px 28px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .nav-btn.prev {
+            background: rgba(255,255,255,0.1);
+            color: #aaa;
+        }
+        .nav-btn.prev:hover { background: rgba(255,255,255,0.2); color: #fff; }
+        .nav-btn.next {
+            background: #e94560;
+            color: #fff;
+        }
+        .nav-btn.next:hover { background: #c0392b; transform: scale(1.03); }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* SUBMIT SECTION */
+        .submit-section {
+            background: rgba(39,174,96,0.15);
+            border: 2px solid rgba(39,174,96,0.4);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        .submit-section h3 { color: #27ae60; margin-bottom: 12px; font-size: 1.2em; }
+        .submit-section p { opacity: 0.8; margin-bottom: 15px; line-height: 1.5; font-size: 0.95em; }
+        .submit-btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: #27ae60;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            text-decoration: none;
+            margin: 5px;
+        }
+        .submit-btn:hover { background: #1e8449; transform: scale(1.03); }
+        .submit-btn.secondary {
+            background: rgba(255,255,255,0.1);
+            color: #aaa;
+            font-size: 0.95em;
+        }
+        .submit-btn.secondary:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+        /* FINAL REMINDER */
+        .final-reminder {
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            text-align: center;
+            border: 1px solid rgba(240,230,140,0.3);
+        }
+        .final-reminder h3 { color: #f0e68c; margin-bottom: 10px; font-size: 1.1em; letter-spacing: 1px; }
+        .final-reminder p {
+            font-style: italic;
+            color: #ddd;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: Georgia, serif;
+        }
+
+        /* AUTOSAVE INDICATOR */
+        .autosave {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(39,174,96,0.9);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 200;
+        }
+        .autosave.show { opacity: 1; }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.5em; }
+            .section { padding: 18px; }
+            .question-block { padding: 14px; }
+            .nav-buttons { flex-direction: column; }
+            .nav-btn { width: 100%; text-align: center; }
+            .progress-steps { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="emoji-big">🎬</div>
+            <h1>Guia de Creació del Guió</h1>
+            <p class="subtitle">El vostre còmic sobre la visita a la residència</p>
+            <div>
+                <span class="badge badge-sc">📋 Servei Comunitari</span>
+                <span class="badge badge-comic">🎨 INS Flix</span>
+            </div>
+        </div>
+
+        <!-- INTRO -->
+        <div class="intro-box">
+            <strong>Com funciona?</strong> Aquesta guia no us dirà què heu d'escriure. Us farà les preguntes adequades perquè <strong>vosaltres</strong> descobriu la vostra història. Responeu amb sinceritat, discutiu en grup, i la història sortirà sola. Al final, podreu enviar el guió al professor.
+        </div>
+
+        <!-- GROUP SELECTOR -->
+        <div class="group-selector" id="groupSelector">
+            <h2>👥 Identifiqueu-vos</h2>
+            <label>Quin grup sou?</label>
+            <div class="group-btns">
+                <button class="group-btn" onclick="selectGroup('A')">Grup A</button>
+                <button class="group-btn" onclick="selectGroup('B')">Grup B</button>
+            </div>
+            <div style="margin-top: 15px;">
+                <label>Membres del grup:</label>
+                <input type="text" class="group-input" id="members" placeholder="Escriviu els vostres noms separats per comes" oninput="saveDraft()">
+            </div>
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-bar" id="progressBar" style="display:none;">
+            <h3>📊 Progrés del guió</h3>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 de 28 respostes</div>
+            <div class="progress-steps">
+                <span class="progress-step active" onclick="goToSection(0)">Personatges</span>
+                <span class="progress-step" onclick="goToSection(1)">Conflicte</span>
+                <span class="progress-step" onclick="goToSection(2)">Vinyetes</span>
+                <span class="progress-step" onclick="goToSection(3)">Revisió</span>
+            </div>
+        </div>
+
+        <!-- ============ PART 1: PERSONATGES ============ -->
+        <div class="section" id="section-0">
+            <h2>🧑 Part 1: Els vostres personatges</h2>
+            <p class="section-intro">Abans de pensar en què passa, heu de saber QUI hi participa. Un bon còmic neix dels personatges, no de la trama.</p>
+
+            <div class="subsection sub-jove">
+                <h3>🎒 El/La jove visitant</h3>
+
+                <div class="question-block" data-q="q1">
+                    <span class="q-number">1</span>
+                    <span class="q-text">Com es diu? Quants anys té?</span>
+                    <span class="q-help">Penseu en algú real o inventat. No cal que sigui un heroi — pot ser algú normal, com vosaltres.</span>
+                    <textarea id="q1" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+                </div>
+
+                <div class="question-block" data-q="q2">
+                    <span class="q-number">2</span>
+                    <span class="q-text">Com se sent ABANS d'anar a la residència?</span>
+                    <span class="q-help">Té ganes? Por? Vergonya? Li fa mandra? Hi va obligat? Per què se sent així?</span>
+                    <textarea id="q2" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+                </div>
+
+                <div class="question-block" data-q="q3">
+                    <span class="q-number">3</span>
+                    <span class="q-text">Què s'imagina que trobarà?</span>
+                    <span class="q-help">Quina idea prèvia té de les residències? De la gent gran? Aquesta idea és correcta o equivocada?</span>
+                    <textarea id="q3" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+                </div>
+            </div>
+
+            <div class="subsection sub-gran">
+                <h3>🧓 La persona gran</h3>
+
+                <div class="question-block" data-q="q4">
+                    <span class="q-number">4</span>
+                    <span class="q-text">Com es diu? Quants anys té? D'on és?</span>
+                    <span class="q-help">Inventeu una persona concreta: amb nom, edat, lloc d'origen. Recordeu la Teresa — els detalls fan que sigui real.</span>
+                    <textarea id="q4" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+                </div>
+
+                <div class="question-block" data-q="q5">
+                    <span class="q-number">5</span>
+                    <span class="q-text">Com va ser la seva vida? Què ha fet, què ha perdut, què estima?</span>
+                    <span class="q-help">No cal una biografia sencera. Però penseu: quina és la cosa més important que li ha passat? Què recorda més?</span>
+                    <textarea id="q5" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+                </div>
+
+                <div class="question-block" data-q="q6">
+                    <span class="q-number">6</span>
+                    <span class="q-text">Per què és a la residència? Com s'hi sent?</span>
+                    <span class="q-help">Hi és per decisió pròpia? Perquè no podia viure sol/a? Li agrada? L'accepta? O ho viu com un dol?</span>
+                    <textarea id="q6" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+                </div>
+
+                <div class="question-block" data-q="q7">
+                    <span class="q-number">7</span>
+                    <span class="q-text">Com reacciona quan li diuen que vindrà un jove a visitar-la?</span>
+                    <span class="q-help">Li fa il·lusió? Desconfiança? Indiferència? Por? Aquí teniu la primera tensió de la història.</span>
+                    <textarea id="q7" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <div></div>
+                <button class="nav-btn next" onclick="goToSection(1)">Continuar → El conflicte</button>
+            </div>
+        </div>
+
+        <!-- ============ PART 2: CONFLICTE ============ -->
+        <div class="section" id="section-1">
+            <h2>⚡ Part 2: El conflicte</h2>
+            <p class="section-intro">Tota bona història té un obstacle. Sense conflicte, no hi ha còmic — només una postal bonica. Penseu en què farà que la visita NO sigui fàcil.</p>
+
+            <div class="question-block" data-q="q8">
+                <span class="q-number">8</span>
+                <span class="q-text">Quin és l'obstacle principal de la història?</span>
+                <span class="q-help">La persona gran no vol parlar? El jove no sap què dir? Hi ha un malentés? Es fan por mútuament? Passen de llarg? Penseu: què fa que la connexió NO sigui automàtica?</span>
+                <textarea id="q8" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+
+            <div class="question-block" data-q="q9">
+                <span class="q-number">9</span>
+                <span class="q-text">En quin moment la història canvia? Què passa?</span>
+                <span class="q-help">Hi ha un gest, un objecte, una paraula, un silenci, un record que trenca el gel? Què fa que passin de la distància a la connexió? No ha de ser espectacular — els moments més potents sovint són petits.</span>
+                <textarea id="q9" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+
+            <div class="tip-box">
+                💡 Recordeu la Teresa: els moments més forts no eren els grans esdeveniments, sinó les petites decisions. Una mirada, un silenci, un record compartit pot valer més que mil paraules.
+            </div>
+
+            <div class="question-block" data-q="q10">
+                <span class="q-number">10</span>
+                <span class="q-text">Com acaba la visita? Què se'n porta el jove? I la persona gran?</span>
+                <span class="q-help">No busqueu un final feliç forçat. Potser el jove marxa amb més preguntes que respostes. Potser la persona gran somriu per primera vegada en setmanes. Potser no hi ha gran final, sinó una petita llavor plantada. Què és més honest?</span>
+                <textarea id="q10" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn prev" onclick="goToSection(0)">← Personatges</button>
+                <button class="nav-btn next" onclick="goToSection(2)">Continuar → Les vinyetes</button>
+            </div>
+        </div>
+
+        <!-- ============ PART 3: VINYETES ============ -->
+        <div class="section" id="section-2">
+            <h2>🎬 Part 3: Les 6 vinyetes</h2>
+            <p class="section-intro">Ara que ja coneixeu els personatges i el conflicte, toca repartir la història en 6 vinyetes. Penseu-hi com 6 fotografies que, posades una al costat de l'altra, expliquen tota la història.</p>
+
+            <div class="tip-box green">
+                🎥 Penseu com un director de cinema: cada vinyeta és un pla. On som? Qui hi ha? Què veiem? Què es diu? Què se sent?
+            </div>
+
+            <!-- VINYETA 1 -->
+            <div class="vinyeta-header">
+                <div class="v-num">1</div>
+                <div>
+                    <div class="v-title">L'ABANS</div>
+                    <div class="v-subtitle">Abans d'entrar a la residència</div>
+                </div>
+            </div>
+            <div class="question-block" data-q="v1a">
+                <span class="q-number">a</span>
+                <span class="q-text">On és el/la jove? Què fa just abans d'entrar a la residència?</span>
+                <textarea id="v1a" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v1b">
+                <span class="q-number">b</span>
+                <span class="q-text">Què pensa? Què sent? Diu alguna cosa (a si mateix, a un company, per telèfon)?</span>
+                <textarea id="v1b" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v1c">
+                <span class="q-number">c</span>
+                <span class="q-text">Què veiem de fons? Com és l'exterior de la residència?</span>
+                <textarea id="v1c" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+
+            <!-- VINYETA 2 -->
+            <div class="vinyeta-header">
+                <div class="v-num">2</div>
+                <div>
+                    <div class="v-title">EL PRIMER CONTACTE</div>
+                    <div class="v-subtitle">La trobada</div>
+                </div>
+            </div>
+            <div class="question-block" data-q="v2a">
+                <span class="q-number">a</span>
+                <span class="q-text">Com és la primera impressió quan entra? Què veu, què sent (olors, sons, llum)?</span>
+                <textarea id="v2a" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v2b">
+                <span class="q-number">b</span>
+                <span class="q-text">Com es produeix la trobada amb la persona gran? Qui parla primer? Què diu?</span>
+                <textarea id="v2b" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v2c">
+                <span class="q-number">c</span>
+                <span class="q-text">Quin és el primer diàleg entre els dos? És còmode o incòmode?</span>
+                <textarea id="v2c" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+
+            <!-- VINYETA 3 -->
+            <div class="vinyeta-header">
+                <div class="v-num">3</div>
+                <div>
+                    <div class="v-title">L'OBSTACLE</div>
+                    <div class="v-subtitle">Quan les coses no surten bé</div>
+                </div>
+            </div>
+            <div class="question-block" data-q="v3a">
+                <span class="q-number">a</span>
+                <span class="q-text">Què va malament? Què no surt com el jove esperava?</span>
+                <textarea id="v3a" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v3b">
+                <span class="q-number">b</span>
+                <span class="q-text">Com reacciona cadascun dels dos personatges davant la dificultat?</span>
+                <textarea id="v3b" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v3c">
+                <span class="q-number">c</span>
+                <span class="q-text">Quin diàleg reflecteix aquesta tensió o distància?</span>
+                <textarea id="v3c" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+
+            <!-- VINYETA 4 -->
+            <div class="vinyeta-header">
+                <div class="v-num">4</div>
+                <div>
+                    <div class="v-title">EL PUNT DE GIR</div>
+                    <div class="v-subtitle">El moment que canvia tot</div>
+                </div>
+            </div>
+            <div class="question-block" data-q="v4a">
+                <span class="q-number">a</span>
+                <span class="q-text">Què canvia? Quin gest, paraula, objecte o silenci trenca el gel?</span>
+                <textarea id="v4a" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v4b">
+                <span class="q-number">b</span>
+                <span class="q-text">Com canvia l'expressió o l'actitud d'un dels dos personatges?</span>
+                <textarea id="v4b" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v4c">
+                <span class="q-number">c</span>
+                <span class="q-text">Escriviu el diàleg (o el silenci) d'aquest moment clau.</span>
+                <textarea id="v4c" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+
+            <!-- VINYETA 5 -->
+            <div class="vinyeta-header">
+                <div class="v-num">5</div>
+                <div>
+                    <div class="v-title">LA CONNEXIÓ</div>
+                    <div class="v-subtitle">Quan es troben de veritat</div>
+                </div>
+            </div>
+            <div class="question-block" data-q="v5a">
+                <span class="q-number">a</span>
+                <span class="q-text">Com és la conversa ara que el gel s'ha trencat? De què parlen?</span>
+                <textarea id="v5a" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v5b">
+                <span class="q-number">b</span>
+                <span class="q-text">Què descobreix el jove sobre la persona gran que no s'esperava?</span>
+                <textarea id="v5b" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v5c">
+                <span class="q-number">c</span>
+                <span class="q-text">Què descobreix la persona gran sobre el jove?</span>
+                <textarea id="v5c" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+
+            <!-- VINYETA 6 -->
+            <div class="vinyeta-header">
+                <div class="v-num">6</div>
+                <div>
+                    <div class="v-title">EL COMIAT</div>
+                    <div class="v-subtitle">Marxar diferent de com has arribat</div>
+                </div>
+            </div>
+            <div class="question-block" data-q="v6a">
+                <span class="q-number">a</span>
+                <span class="q-text">Com s'acomiaden? Què es diuen l'última cosa?</span>
+                <textarea id="v6a" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v6b">
+                <span class="q-number">b</span>
+                <span class="q-text">Com se sent el/la jove quan marxa? Ha canviat respecte la vinyeta 1?</span>
+                <textarea id="v6b" placeholder="Escriviu aquí..." oninput="onAnswer(this)"></textarea>
+            </div>
+            <div class="question-block" data-q="v6c">
+                <span class="q-number">c</span>
+                <span class="q-text">Si voleu, afegiu un text final adreçat al lector: què voleu que pensi qui llegeixi el vostre còmic?</span>
+                <textarea id="v6c" placeholder="Escriviu aquí (opcional)..." oninput="onAnswer(this)"></textarea>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn prev" onclick="goToSection(1)">← El conflicte</button>
+                <button class="nav-btn next" onclick="goToSection(3)">Continuar → Revisió final</button>
+            </div>
+        </div>
+
+        <!-- ============ PART 4: REVISIÓ ============ -->
+        <div class="section" id="section-3">
+            <h2>✅ Part 4: Reviseu abans de dibuixar</h2>
+            <p class="section-intro">Abans de passar a Google Slides, feu-vos aquestes últimes preguntes. Si podeu respondre-les totes, el vostre guió està a punt.</p>
+
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="check-box"></div>
+                <div class="check-text">Si algú llegís només els diàlegs, entendria la història?</div>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="check-box"></div>
+                <div class="check-text">Els dos personatges són persones reals amb emocions, o són cartrons plans?</div>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="check-box"></div>
+                <div class="check-text">Hi ha un moment on la història canvia de direcció? Es nota?</div>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="check-box"></div>
+                <div class="check-text">El final és honest? O és massa feliç per ser creïble?</div>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="check-box"></div>
+                <div class="check-text">Si vosaltres fóssiu el/la jove del còmic, us sentireu identificats?</div>
+            </div>
+            <div class="checklist-item" onclick="toggleCheck(this)">
+                <div class="check-box"></div>
+                <div class="check-text">Alguna cosa del que heu escrit us podria passar de veritat quan aneu a la residència?</div>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="submit-section">
+                <h3>📤 Envieu el vostre guió</h3>
+                <p>Feu clic al botó per descarregar el guió com a fitxer de text. Després pugeu-lo a la carpeta de Google Drive de la tasca.</p>
+                <button class="submit-btn" onclick="downloadGuio()">📥 Descarregar guió</button>
+                <br>
+                <a class="submit-btn secondary" href="https://drive.google.com/" target="_blank" rel="noopener">📂 Obrir Google Drive</a>
+            </div>
+
+            <div class="final-reminder">
+                <h3>RECORDEU</h3>
+                <p>No esteu inventant una història qualsevol. Esteu assajant mentalment el que viureu de veritat quan aneu a la residència. Cada diàleg que escriviu és una possibilitat real.</p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn prev" onclick="goToSection(2)">← Les vinyetes</button>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTOSAVE INDICATOR -->
+    <div class="autosave" id="autosave">💾 Desat automàticament</div>
+
+    <script>
+        let currentSection = -1;
+        let selectedGroup = '';
+        const TOTAL_QUESTIONS = 28;
+        const STORAGE_KEY = 'guio_comic_residencia';
+
+        // GROUP SELECTION
+        function selectGroup(g) {
+            selectedGroup = g;
+            document.querySelectorAll('.group-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('progressBar').style.display = 'block';
+            if (currentSection === -1) goToSection(0);
+            saveDraft();
+        }
+
+        // NAVIGATION
+        function goToSection(idx) {
+            currentSection = idx;
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+            document.getElementById('section-' + idx).classList.add('visible');
+            document.querySelectorAll('.progress-step').forEach((s, i) => {
+                s.classList.remove('active');
+                if (i === idx) s.classList.add('active');
+            });
+            window.scrollTo({ top: document.getElementById('section-' + idx).offsetTop - 120, behavior: 'smooth' });
+            updateProgress();
+        }
+
+        // ANSWER TRACKING
+        function onAnswer(el) {
+            const block = el.closest('.question-block');
+            if (el.value.trim().length > 0) {
+                block.classList.add('answered');
+            } else {
+                block.classList.remove('answered');
+            }
+            updateProgress();
+            saveDraft();
+        }
+
+        function updateProgress() {
+            const answered = document.querySelectorAll('.question-block.answered').length;
+            const pct = Math.round((answered / TOTAL_QUESTIONS) * 100);
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressText').textContent = answered + ' de ' + TOTAL_QUESTIONS + ' respostes (' + pct + '%)';
+        }
+
+        // CHECKLIST
+        function toggleCheck(item) {
+            item.classList.toggle('checked');
+            const box = item.querySelector('.check-box');
+            box.textContent = item.classList.contains('checked') ? '✓' : '';
+            saveDraft();
+        }
+
+        // AUTOSAVE TO LOCALSTORAGE
+        function saveDraft() {
+            const data = {
+                group: selectedGroup,
+                members: document.getElementById('members').value,
+                answers: {},
+                checklist: []
+            };
+            document.querySelectorAll('.question-block textarea').forEach(ta => {
+                data.answers[ta.id] = ta.value;
+            });
+            document.querySelectorAll('.checklist-item').forEach((item, i) => {
+                data.checklist[i] = item.classList.contains('checked');
+            });
+
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                showAutosave();
+            } catch(e) {
+                // localStorage not available, silent fail
+            }
+        }
+
+        function loadDraft() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const data = JSON.parse(raw);
+
+                if (data.group) {
+                    selectedGroup = data.group;
+                    document.querySelectorAll('.group-btn').forEach(b => {
+                        if (b.textContent.includes(data.group)) {
+                            b.classList.add('active');
+                        }
+                    });
+                    document.getElementById('progressBar').style.display = 'block';
+                    goToSection(0);
+                }
+                if (data.members) {
+                    document.getElementById('members').value = data.members;
+                }
+                if (data.answers) {
+                    Object.keys(data.answers).forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            el.value = data.answers[id];
+                            if (data.answers[id].trim()) {
+                                el.closest('.question-block').classList.add('answered');
+                            }
+                        }
+                    });
+                }
+                if (data.checklist) {
+                    document.querySelectorAll('.checklist-item').forEach((item, i) => {
+                        if (data.checklist[i]) {
+                            item.classList.add('checked');
+                            item.querySelector('.check-box').textContent = '✓';
+                        }
+                    });
+                }
+                updateProgress();
+            } catch(e) {
+                // silent fail
+            }
+        }
+
+        function showAutosave() {
+            const el = document.getElementById('autosave');
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 1500);
+        }
+
+        // DOWNLOAD
+        function downloadGuio() {
+            const members = document.getElementById('members').value || 'sense noms';
+            let text = '═══════════════════════════════════════════\n';
+            text += '  GUIÓ DEL CÒMIC — VISITA A LA RESIDÈNCIA\n';
+            text += '═══════════════════════════════════════════\n\n';
+            text += 'Grup: ' + (selectedGroup || '?') + '\n';
+            text += 'Membres: ' + members + '\n';
+            text += 'Data: ' + new Date().toLocaleDateString('ca-ES') + '\n\n';
+
+            const sections = [
+                { title: 'PART 1: ELS PERSONATGES', questions: [
+                    {id:'q1', label:'Nom i edat del jove'},
+                    {id:'q2', label:'Com se sent abans'},
+                    {id:'q3', label:'Què s\'imagina'},
+                    {id:'q4', label:'Nom, edat i origen de la persona gran'},
+                    {id:'q5', label:'La seva vida'},
+                    {id:'q6', label:'Per què és a la residència'},
+                    {id:'q7', label:'Reacció a la visita'},
+                ]},
+                { title: 'PART 2: EL CONFLICTE', questions: [
+                    {id:'q8', label:'L\'obstacle principal'},
+                    {id:'q9', label:'El moment de canvi'},
+                    {id:'q10', label:'Com acaba la visita'},
+                ]},
+                { title: 'PART 3: LES 6 VINYETES', questions: [
+                    {id:'v1a', label:'Vinyeta 1a: On és el jove'},
+                    {id:'v1b', label:'Vinyeta 1b: Què pensa/sent'},
+                    {id:'v1c', label:'Vinyeta 1c: Fons'},
+                    {id:'v2a', label:'Vinyeta 2a: Primera impressió'},
+                    {id:'v2b', label:'Vinyeta 2b: La trobada'},
+                    {id:'v2c', label:'Vinyeta 2c: Primer diàleg'},
+                    {id:'v3a', label:'Vinyeta 3a: Què va malament'},
+                    {id:'v3b', label:'Vinyeta 3b: Reaccions'},
+                    {id:'v3c', label:'Vinyeta 3c: Diàleg de tensió'},
+                    {id:'v4a', label:'Vinyeta 4a: Què canvia'},
+                    {id:'v4b', label:'Vinyeta 4b: Canvi d\'actitud'},
+                    {id:'v4c', label:'Vinyeta 4c: Diàleg clau'},
+                    {id:'v5a', label:'Vinyeta 5a: La conversa'},
+                    {id:'v5b', label:'Vinyeta 5b: Descoberta del jove'},
+                    {id:'v5c', label:'Vinyeta 5c: Descoberta de la persona gran'},
+                    {id:'v6a', label:'Vinyeta 6a: El comiat'},
+                    {id:'v6b', label:'Vinyeta 6b: Com se sent en marxar'},
+                    {id:'v6c', label:'Vinyeta 6c: Missatge final'},
+                ]}
+            ];
+
+            sections.forEach(sec => {
+                text += '───────────────────────────────────────────\n';
+                text += sec.title + '\n';
+                text += '───────────────────────────────────────────\n\n';
+                sec.questions.forEach(q => {
+                    const val = document.getElementById(q.id)?.value?.trim() || '(sense resposta)';
+                    text += '▸ ' + q.label + ':\n';
+                    text += val + '\n\n';
+                });
+            });
+
+            text += '═══════════════════════════════════════════\n';
+            text += '  Servei Comunitari — INS Flix\n';
+            text += '═══════════════════════════════════════════\n';
+
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'guio_comic_grup_' + (selectedGroup || 'X') + '.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // INIT
+        loadDraft();
+    </script>
+</body>
+</html>
