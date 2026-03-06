@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preparació per a l'entrevista</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #1a1a1a;
+            color: #f5f5f5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 40px 60px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── PROGRESS BAR ── */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: #d4a574;
+            transition: width 0.5s ease;
+            z-index: 100;
+        }
+
+        /* ── ETIQUETA FASE ── */
+        .fase-label {
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            color: #d4a574;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            margin-top: 10px;
+        }
+
+        /* ── PANTALLA 0: INTRO ── */
+        .screen-intro {
+            background: linear-gradient(135deg, #2c1810 0%, #1a1a1a 100%);
+            justify-content: center;
+        }
+
+        .screen-intro h1 {
+            font-size: 2.6rem;
+            color: #d4a574;
+            margin-bottom: 12px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .screen-intro h2 {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            font-weight: normal;
+            margin-bottom: 35px;
+            letter-spacing: 1px;
+        }
+
+        .intro-img {
+            width: 100%;
+            max-width: 560px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            opacity: 0.85;
+        }
+
+        .intro-text {
+            max-width: 650px;
+            font-size: 1.1rem;
+            line-height: 1.85;
+            color: #c8c8c8;
+            margin-bottom: 12px;
+        }
+
+        .intro-highlight {
+            font-size: 1.15rem;
+            color: #d4a574;
+            font-style: italic;
+            margin: 18px 0 30px;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* ── BOTONS ── */
+        .btn-primary {
+            padding: 16px 48px;
+            font-size: 1.1rem;
+            background: #d4a574;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background: #e6b885;
+            transform: scale(1.04);
+        }
+
+        .btn-secondary {
+            padding: 12px 36px;
+            font-size: 1rem;
+            background: transparent;
+            color: #d4a574;
+            border: 2px solid #d4a574;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            margin-top: 20px;
+        }
+
+        .btn-secondary:hover {
+            background: #d4a574;
+            color: #1a1a1a;
+        }
+
+        /* ── TÍTOLS DE PANTALLA ── */
+        .screen-title {
+            font-size: 1.9rem;
+            color: #d4a574;
+            margin-bottom: 10px;
+            max-width: 680px;
+        }
+
+        .screen-subtitle {
+            font-size: 1.05rem;
+            color: #909090;
+            margin-bottom: 28px;
+            font-style: italic;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* ── FORMULARIS ── */
+        .form-group {
+            width: 100%;
+            max-width: 580px;
+            margin-bottom: 22px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            color: #d4a574;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(212,165,116,0.4);
+            border-radius: 8px;
+            color: #f0f0f0;
+            font-family: 'Georgia', serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #d4a574;
+            background: rgba(212,165,116,0.07);
+        }
+
+        .form-group textarea {
+            min-height: 90px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-group select option {
+            background: #2a2a2a;
+            color: #f0f0f0;
+        }
+
+        /* ── BOTONS DE SELECCIÓ (P2 i P3) ── */
+        .choice-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 580px;
+            margin-bottom: 22px;
+        }
+
+        .choice-btn {
+            padding: 14px 18px;
+            background: rgba(212,165,116,0.07);
+            color: #c8c8c8;
+            border: 1.5px solid rgba(212,165,116,0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: 'Georgia', serif;
+            font-size: 0.98rem;
+            text-align: left;
+        }
+
+        .choice-btn:hover {
+            border-color: #d4a574;
+            background: rgba(212,165,116,0.15);
+            color: #f0f0f0;
+        }
+
+        .choice-btn.selected {
+            border-color: #d4a574;
+            background: rgba(212,165,116,0.22);
+            color: #d4a574;
+        }
+
+        .choice-label {
+            display: block;
+            font-size: 0.85rem;
+            text-align: left;
+            width: 100%;
+            max-width: 580px;
+            color: #d4a574;
+            margin-bottom: 8px;
+        }
+
+        /* ── CAIXA PONT TERESA ── */
+        .teresa-bridge {
+            background: rgba(212,165,116,0.08);
+            border-left: 3px solid #d4a574;
+            border-radius: 0 10px 10px 0;
+            padding: 20px 22px;
+            max-width: 580px;
+            width: 100%;
+            margin-bottom: 28px;
+            text-align: left;
+        }
+
+        .teresa-bridge p {
+            font-size: 0.98rem;
+            color: #c0c0c0;
+            line-height: 1.75;
+            font-style: italic;
+        }
+
+        .teresa-bridge span {
+            color: #d4a574;
+        }
+
+        /* ── PREGUNTES SUGGERIDES ── */
+        .preguntes-grup {
+            width: 100%;
+            max-width: 580px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .preguntes-grup h4 {
+            font-size: 0.85rem;
+            color: #d4a574;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(212,165,116,0.25);
+        }
+
+        .pregunta-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 11px 14px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.03);
+            border: 1.5px solid rgba(212,165,116,0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pregunta-item:hover {
+            border-color: rgba(212,165,116,0.5);
+            background: rgba(212,165,116,0.08);
+        }
+
+        .pregunta-item.selected {
+            border-color: #d4a574;
+            background: rgba(212,165,116,0.15);
+        }
+
+        .pregunta-checkbox {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            border: 2px solid #d4a574;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .pregunta-item.selected .pregunta-checkbox::after {
+            content: '✓';
+            font-size: 12px;
+            color: #d4a574;
+            font-weight: bold;
+        }
+
+        .pregunta-text {
+            font-size: 0.97rem;
+            color: #d8d8d8;
+            line-height: 1.55;
+        }
+
+        /* ── RESUM FINAL ── */
+        .resum-box {
+            background: rgba(212,165,116,0.07);
+            border: 1px solid rgba(212,165,116,0.3);
+            border-radius: 12px;
+            padding: 22px 26px;
+            max-width: 580px;
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .resum-box h4 {
+            color: #d4a574;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .resum-linia {
+            font-size: 0.97rem;
+            color: #c8c8c8;
+            line-height: 1.7;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .resum-linia:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .resum-linia strong {
+            color: #d4a574;
+        }
+
+        /* ── PANTALLA PONT (P2) ── */
+        .screen-pont {
+            background: linear-gradient(180deg, #1a1a1a 0%, #2c1810 100%);
+        }
+
+        .pont-img {
+            width: 100%;
+            max-width: 440px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+            opacity: 0.7;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+
+        /* ── PANTALLA TEMES (P3) ── */
+        .screen-temes {
+            background: #1a1a1a;
+        }
+
+        .nota-seleccio {
+            font-size: 0.88rem;
+            color: #777;
+            font-style: italic;
+            margin-bottom: 18px;
+            max-width: 580px;
+        }
+
+        /* ── PANTALLA REFLEXIÓ (P5) ── */
+        .screen-reflexio {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c1810 100%);
+        }
+
+        /* ── PANTALLA FINAL (P6) ── */
+        .screen-final {
+            background: linear-gradient(135deg, #2c1810 0%, #1a1a1a 50%, #2c1810 100%);
+            justify-content: center;
+        }
+
+        .screen-final h2 {
+            font-size: 2rem;
+            color: #d4a574;
+            margin-bottom: 18px;
+        }
+
+        .screen-final p {
+            font-size: 1.1rem;
+            color: #c0c0c0;
+            max-width: 580px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: #d4a574;
+            margin: 20px auto;
+            opacity: 0.5;
+        }
+
+        /* ── MISSATGE ERROR ── */
+        .error-msg {
+            color: #c0504d;
+            font-size: 0.88rem;
+            margin-top: -12px;
+            margin-bottom: 14px;
+            display: none;
+            width: 100%;
+            max-width: 580px;
+            text-align: left;
+        }
+
+        /* ── PIE ── */
+        .peu {
+            position: fixed;
+            bottom: 14px;
+            right: 18px;
+            font-size: 0.8rem;
+            color: #444;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 640px) {
+            .screen-intro h1 { font-size: 1.9rem; }
+            .screen-title { font-size: 1.5rem; }
+            .screen { padding: 20px 18px 60px; }
+            .btn-primary { padding: 14px 36px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar" style="width:0%"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- P0 — INTRODUCCIÓ                                   -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen screen-intro active" id="P0">
+    <h1>Ara és el teu torn</h1>
+    <h2>Preparació per a l'entrevista · INS Flix</h2>
+    <img src="riu.jpg" alt="El riu Ebre" class="intro-img" onerror="this.style.display='none'">
+    <p class="intro-text">
+        Fa unes setmanes vas viure la vida de la <strong style="color:#d4a574">Teresa</strong>.
+        Vas triar. Vas sentir el pes de decidir.
+    </p>
+    <p class="intro-text">
+        Ara vas a parlar amb una persona real. Algú que, com la Teresa,
+        ha viscut dècades d'una vida sencera.
+    </p>
+    <p class="intro-highlight">
+        Aquesta pantalla t'ajudarà a preparar-te per escoltar de veritat.
+    </p>
+    <button class="btn-primary" onclick="goTo('P1')">Comencem →</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- P1 — QUI ÉS LA PERSONA?                           -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen" id="P1">
+    <div class="fase-label">P1 · La persona</div>
+    <h2 class="screen-title">Qui entrevistaràs?</h2>
+    <p class="screen-subtitle">
+        Comença pel més senzill: qui és aquesta persona per a tu.
+    </p>
+
+    <div class="form-group">
+        <label>Com es diu?</label>
+        <input type="text" id="p1_nom" placeholder="Nom de la persona" />
+    </div>
+    <div id="err_p1_nom" class="error-msg">Escriu el nom de la persona.</div>
+
+    <div class="form-group">
+        <label>Quants anys té, aproximadament?</label>
+        <input type="text" id="p1_edat" placeholder="Ex: 78, 85, cap als 70..." />
+    </div>
+
+    <span class="choice-label">Quin vincle tens amb ella o ell?</span>
+    <div class="choice-group" id="p1_vincle_group">
+        <button class="choice-btn" onclick="selectOne('p1_vincle_group', this, 'Avi o àvia')">Avi o àvia</button>
+        <button class="choice-btn" onclick="selectOne('p1_vincle_group', this, 'Altre familiar')">Altre familiar (oncle/a, padrí...)</button>
+        <button class="choice-btn" onclick="selectOne('p1_vincle_group', this, 'Veí o veïna')">Veí o veïna</button>
+        <button class="choice-btn" onclick="selectOne('p1_vincle_group', this, 'Persona de la residència')">Persona de la residència</button>
+        <button class="choice-btn" onclick="selectOne('p1_vincle_group', this, 'Altre')">Altre</button>
+    </div>
+    <div id="err_p1_vincle" class="error-msg">Tria el vincle que tens amb aquesta persona.</div>
+
+    <div class="form-group">
+        <label>Escriu una cosa que ja saps d'ella o d'ell.</label>
+        <textarea id="p1_saps" placeholder="Pot ser qualsevol cosa: on ha viscut, a que es dedicava, com és..."></textarea>
+    </div>
+
+    <button class="btn-secondary" onclick="validateP1()">Continuar →</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- P2 — EL PONT AMB LA TERESA                        -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen screen-pont" id="P2">
+    <div class="fase-label">P2 · La connexió</div>
+    <img src="08.jpg" alt="Persona gran" class="pont-img" onerror="this.style.display='none'">
+
+    <div class="teresa-bridge">
+        <p>
+            La <span>Teresa</span> va treballar de jove perquè a casa necessitaven diners.
+            Va estimar. Va criar fills. Va envellir, va perdre gent estimada, va adaptar-se.
+            <br><br>
+            <span id="p2_nom_teresa">Aquesta persona</span> també ha fet tot això.
+            De veritat. Sense tornar enrere.
+        </p>
+    </div>
+
+    <span class="choice-label">Creus que ha hagut de prendre decisions difícils a la vida?</span>
+    <div class="choice-group" id="p2_decisions_group">
+        <button class="choice-btn" onclick="selectOne('p2_decisions_group', this, 'Sí, segur')">Sí, segur</button>
+        <button class="choice-btn" onclick="selectOne('p2_decisions_group', this, 'Probablement sí')">Probablement sí</button>
+        <button class="choice-btn" onclick="selectOne('p2_decisions_group', this, 'No ho sé')">No ho sé</button>
+    </div>
+    <div id="err_p2_dec" class="error-msg">Selecciona una opció.</div>
+
+    <div class="form-group" style="max-width:580px; width:100%">
+        <label>Quina és la cosa que menys saps de la seva vida?</label>
+        <textarea id="p2_menys_saps" placeholder="Potser la seva joventut, o com ha viscut les coses difícils..."></textarea>
+    </div>
+
+    <button class="btn-secondary" onclick="validateP2()">Continuar →</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- P3 — QUINS TEMES T'INTERESSEN?                    -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen screen-temes" id="P3">
+    <div class="fase-label">P3 · Els temes</div>
+    <h2 class="screen-title">Sobre què vols preguntar?</h2>
+    <p class="screen-subtitle">
+        Tria un o dos temes que et generin més curiositat.<br>
+        No has d'abastar-ho tot. Una bona conversa va a fons sobre poc.
+    </p>
+
+    <p class="nota-seleccio">Selecciona com a mínim un tema.</p>
+    <div id="err_p3" class="error-msg" style="display:none">Selecciona almenys un tema.</div>
+
+    <div class="choice-group">
+        <button class="choice-btn" id="tema_feina"
+            onclick="toggleTema(this, 'feina')">
+            🏭 &nbsp; La seva feina i com es va guanyar la vida
+        </button>
+        <button class="choice-btn" id="tema_amor"
+            onclick="toggleTema(this, 'amor')">
+            ❤️ &nbsp; Les persones importants que ha estimat
+        </button>
+        <button class="choice-btn" id="tema_familia"
+            onclick="toggleTema(this, 'familia')">
+            👨‍👩‍👧 &nbsp; La família i els fills
+        </button>
+        <button class="choice-btn" id="tema_dificultats"
+            onclick="toggleTema(this, 'dificultats')">
+            💪 &nbsp; Les coses difícils que ha hagut de superar
+        </button>
+        <button class="choice-btn" id="tema_ara"
+            onclick="toggleTema(this, 'ara')">
+            🏡 &nbsp; Com és la seva vida ara i com se sent
+        </button>
+    </div>
+
+    <button class="btn-secondary" onclick="validateP3()">Continuar →</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- P4 — LES TEVES PREGUNTES                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen" id="P4">
+    <div class="fase-label">P4 · Les preguntes</div>
+    <h2 class="screen-title">Tria les preguntes que faràs</h2>
+    <p class="screen-subtitle">
+        Aquí tens preguntes naturals per als temes que has triat.<br>
+        Marca les que et semblin millors. No les llegiràs literalment: són el punt de partida.
+    </p>
+
+    <div id="preguntes-container"></div>
+
+    <div id="err_p4" class="error-msg" style="display:none; max-width:580px">Selecciona almenys una pregunta.</div>
+
+    <button class="btn-secondary" onclick="validateP4()">Continuar →</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- P5 — COM ET PREPARES?                             -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen screen-reflexio" id="P5">
+    <div class="fase-label">P5 · La preparació</div>
+    <h2 class="screen-title">Abans d'anar</h2>
+    <p class="screen-subtitle">
+        Les últimes preguntes són per a tu, no per a l'entrevista.
+    </p>
+
+    <div class="form-group">
+        <label>On faràs l'entrevista?</label>
+        <input type="text" id="p5_on" placeholder="A casa seva, per telèfon, a la residència..."/>
+    </div>
+
+    <div class="form-group">
+        <label>Quan la faràs?</label>
+        <input type="text" id="p5_quan" placeholder="Dia o moment aproximat"/>
+    </div>
+
+    <div class="form-group">
+        <label>Escriu una cosa que creus que et sorprendrà descobrir.</label>
+        <textarea id="p5_sorpresa" placeholder="Pot ser una cosa que no t'esperaries, un aspecte de la seva vida que no coneixes..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Si pogués dir-li una cosa abans de preguntar-li res... què li diries? <span style="color:#555; font-size:0.88rem">(opcional)</span></label>
+        <textarea id="p5_diria" placeholder="No cal que sigui perfecte. Escriu el que et surti."></textarea>
+    </div>
+
+    <button class="btn-secondary" onclick="goToResum()">Veure el resum →</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- P6 — RESUM I ENVIAMENT                            -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="screen screen-final" id="P6">
+    <div class="fase-label">P6 · Llestos</div>
+    <h2>Estàs preparat/da</h2>
+    <p>Revisa el que has preparat. Si tot és correcte, envia-ho.</p>
+
+    <div class="divider"></div>
+
+    <div class="resum-box">
+        <h4>La persona</h4>
+        <div class="resum-linia"><strong>Nom:</strong> <span id="resum_nom"></span></div>
+        <div class="resum-linia"><strong>Edat aprox.:</strong> <span id="resum_edat"></span></div>
+        <div class="resum-linia"><strong>Vincle:</strong> <span id="resum_vincle"></span></div>
+        <div class="resum-linia"><strong>El que saps d'ella/ell:</strong> <span id="resum_saps"></span></div>
+    </div>
+
+    <div class="resum-box">
+        <h4>La connexió</h4>
+        <div class="resum-linia"><strong>Decisions difícils:</strong> <span id="resum_decisions"></span></div>
+        <div class="resum-linia"><strong>El que menys saps:</strong> <span id="resum_menys"></span></div>
+    </div>
+
+    <div class="resum-box">
+        <h4>Els temes i les preguntes</h4>
+        <div class="resum-linia"><strong>Temes triats:</strong> <span id="resum_temes"></span></div>
+        <div class="resum-linia"><strong>Preguntes seleccionades:</strong>
+            <div id="resum_preguntes" style="margin-top:6px; color:#c8c8c8; font-size:0.93rem; line-height:1.7;"></div>
+        </div>
+    </div>
+
+    <div class="resum-box">
+        <h4>La preparació</h4>
+        <div class="resum-linia"><strong>On:</strong> <span id="resum_on"></span></div>
+        <div class="resum-linia"><strong>Quan:</strong> <span id="resum_quan"></span></div>
+        <div class="resum-linia"><strong>El que et sorprendrà:</strong> <span id="resum_sorpresa"></span></div>
+        <div class="resum-linia" id="resum_diria_cont"><strong>El que li diries:</strong> <span id="resum_diria"></span></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="btn-primary" onclick="enviarFormulari()">
+        Enviar al formulari →
+    </button>
+
+    <p style="font-size:0.85rem; color:#555; margin-top:16px; max-width:500px;">
+        En fer clic s'obrirà el formulari amb les teves respostes.
+    </p>
+</div>
+
+<div class="peu">INS Flix · Servei Comunitari 2025-26</div>
+
+<script>
+    // ─── CONFIGURACIÓ ────────────────────────────────────────────
+    // Enganxa aquí l'adreça del teu Google Forms quan el tinguis creat:
+    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScoLHaVqLaMIkANcGp4ODlRha1ypBaAGX0XwOiy1eAjs5WSvw/viewform';
+
+    const FORM_FIELDS = {
+        nom:        'entry.909532528',
+        edat:       'entry.1199498090',
+        vincle:     'entry.1035089242',
+        saps:       'entry.803885300',
+        decisions:  'entry.1480556963',
+        menys_saps: 'entry.1585936600',
+        temes:      'entry.808680120',
+        preguntes:  'entry.1663354939',
+        on:         'entry.228133839',
+        quan:       'entry.1577227294',
+        sorpresa:   'entry.1652099278',
+        diria:      'entry.1823531218'
+    };
+    // ─────────────────────────────────────────────────────────────
+
+    const PANTALLES = ['P0','P1','P2','P3','P4','P5','P6'];
+    const TOTAL = PANTALLES.length - 1;
+    let current = 0;
+
+    const selections = {
+        p1_vincle: '',
+        p2_decisions: '',
+        temes: [],
+        preguntes: []
+    };
+
+    const PREGUNTES_PER_TEMA = {
+        feina: {
+            titol: '🏭 La feina i la vida',
+            preguntes: [
+                'De jove, a on treballàveu? Com era un dia normal?',
+                'Hi havia alguna cosa de la feina que li agradava molt?',
+                'Si hagués pogut triar qualsevol feina, quina hauria escollit?'
+            ]
+        },
+        amor: {
+            titol: '❤️ Les persones importants',
+            preguntes: [
+                'Hi ha alguna persona que hagi tingut molta importància a la seva vida?',
+                'Com descriu una amistat que hagi durat tota la vida?',
+                'Qui és la persona que més l\'ha ensenyat alguna cosa?'
+            ]
+        },
+        familia: {
+            titol: '👨‍👩‍👧 La família',
+            preguntes: [
+                'Com era la seva família quan era petit o petita?',
+                'Quin moment familiar recorda amb més alegria?',
+                'Quin consell donaria als pares i mares d\'avui?'
+            ]
+        },
+        dificultats: {
+            titol: '💪 Les coses difícils',
+            preguntes: [
+                'Hi ha hagut èpoques de la seva vida especialment difícils?',
+                'Quan les coses anaven malament, qui l\'ajudava?',
+                'Ara, mirant enrere, com veu aquells moments difícils?'
+            ]
+        },
+        ara: {
+            titol: '🏡 La vida ara',
+            preguntes: [
+                'Què és el que més li agrada de la seva rutina d\'ara?',
+                'Què és el que troba més a faltar de quan era jove?',
+                'Quan se sent més content o contenta avui en dia?'
+            ]
+        }
+    };
+
+    function goTo(id) {
+        const curr = document.getElementById(PANTALLES[current]);
+        curr.classList.remove('active');
+        current = PANTALLES.indexOf(id);
+        const next = document.getElementById(id);
+        next.classList.add('active');
+        updateProgress();
+        window.scrollTo(0, 0);
+    }
+
+    function updateProgress() {
+        const pct = (current / TOTAL) * 100;
+        document.getElementById('progressBar').style.width = pct + '%';
+    }
+
+    function selectOne(groupId, btn, value) {
+        const group = document.getElementById(groupId);
+        group.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        if (groupId === 'p1_vincle_group') selections.p1_vincle = value;
+        if (groupId === 'p2_decisions_group') selections.p2_decisions = value;
+    }
+
+    function toggleTema(btn, key) {
+        const idx = selections.temes.indexOf(key);
+        if (idx === -1) {
+            selections.temes.push(key);
+            btn.classList.add('selected');
+        } else {
+            selections.temes.splice(idx, 1);
+            btn.classList.remove('selected');
+        }
+    }
+
+    function togglePregunta(item, text) {
+        const idx = selections.preguntes.indexOf(text);
+        if (idx === -1) {
+            selections.preguntes.push(text);
+            item.classList.add('selected');
+        } else {
+            selections.preguntes.splice(idx, 1);
+            item.classList.remove('selected');
+        }
+    }
+
+    // ── VALIDACIONS ──────────────────────────────────────────────
+
+    function validateP1() {
+        const nom = document.getElementById('p1_nom').value.trim();
+        const errNom = document.getElementById('err_p1_nom');
+        const errVincle = document.getElementById('err_p1_vincle');
+        let ok = true;
+
+        if (!nom) { errNom.style.display = 'block'; ok = false; }
+        else errNom.style.display = 'none';
+
+        if (!selections.p1_vincle) { errVincle.style.display = 'block'; ok = false; }
+        else errVincle.style.display = 'none';
+
+        if (ok) {
+            document.getElementById('p2_nom_teresa').textContent =
+                nom.charAt(0).toUpperCase() + nom.slice(1);
+            goTo('P2');
+        }
+    }
+
+    function validateP2() {
+        const errDec = document.getElementById('err_p2_dec');
+        if (!selections.p2_decisions) {
+            errDec.style.display = 'block';
+            return;
+        }
+        errDec.style.display = 'none';
+        goTo('P3');
+    }
+
+    function validateP3() {
+        const errP3 = document.getElementById('err_p3');
+        if (selections.temes.length === 0) {
+            errP3.style.display = 'block';
+            return;
+        }
+        errP3.style.display = 'none';
+        buildPreguntes();
+        goTo('P4');
+    }
+
+    function validateP4() {
+        const errP4 = document.getElementById('err_p4');
+        if (selections.preguntes.length === 0) {
+            errP4.style.display = 'block';
+            return;
+        }
+        errP4.style.display = 'none';
+        goTo('P5');
+    }
+
+    function buildPreguntes() {
+        const container = document.getElementById('preguntes-container');
+        container.innerHTML = '';
+        selections.preguntes = []; // reset
+
+        selections.temes.forEach(tema => {
+            const info = PREGUNTES_PER_TEMA[tema];
+            const grup = document.createElement('div');
+            grup.className = 'preguntes-grup';
+            grup.innerHTML = `<h4>${info.titol}</h4>`;
+
+            info.preguntes.forEach(q => {
+                const item = document.createElement('div');
+                item.className = 'pregunta-item';
+                item.innerHTML = `<div class="pregunta-checkbox"></div><span class="pregunta-text">${q}</span>`;
+                item.onclick = () => togglePregunta(item, q);
+                grup.appendChild(item);
+            });
+
+            container.appendChild(grup);
+        });
+    }
+
+    function goToResum() {
+        const nom = document.getElementById('p1_nom').value.trim();
+        document.getElementById('resum_nom').textContent = nom || '—';
+        document.getElementById('resum_edat').textContent = document.getElementById('p1_edat').value.trim() || '—';
+        document.getElementById('resum_vincle').textContent = selections.p1_vincle || '—';
+        document.getElementById('resum_saps').textContent = document.getElementById('p1_saps').value.trim() || '—';
+        document.getElementById('resum_decisions').textContent = selections.p2_decisions || '—';
+        document.getElementById('resum_menys').textContent = document.getElementById('p2_menys_saps').value.trim() || '—';
+
+        const nomsTemes = selections.temes.map(t => PREGUNTES_PER_TEMA[t].titol).join(', ');
+        document.getElementById('resum_temes').textContent = nomsTemes || '—';
+
+        const pregsEl = document.getElementById('resum_preguntes');
+        if (selections.preguntes.length > 0) {
+            pregsEl.innerHTML = selections.preguntes.map(p => `• ${p}`).join('<br>');
+        } else {
+            pregsEl.textContent = '—';
+        }
+
+        document.getElementById('resum_on').textContent = document.getElementById('p5_on').value.trim() || '—';
+        document.getElementById('resum_quan').textContent = document.getElementById('p5_quan').value.trim() || '—';
+        document.getElementById('resum_sorpresa').textContent = document.getElementById('p5_sorpresa').value.trim() || '—';
+
+        const diria = document.getElementById('p5_diria').value.trim();
+        if (diria) {
+            document.getElementById('resum_diria').textContent = diria;
+            document.getElementById('resum_diria_cont').style.display = 'block';
+        } else {
+            document.getElementById('resum_diria_cont').style.display = 'none';
+        }
+
+        goTo('P6');
+    }
+
+    function enviarFormulari() {
+        if (GOOGLE_FORM_URL === 'ENGANXA_AQUÍ_L_ADREÇA_DEL_FORMULARI') {
+            alert('El formulari encara no està configurat. Avisa el professor.');
+            return;
+        }
+
+        const dades = {
+            nom: document.getElementById('p1_nom').value.trim(),
+            edat: document.getElementById('p1_edat').value.trim(),
+            vincle: selections.p1_vincle,
+            saps: document.getElementById('p1_saps').value.trim(),
+            decisions: selections.p2_decisions,
+            menys_saps: document.getElementById('p2_menys_saps').value.trim(),
+            temes: selections.temes.map(t => PREGUNTES_PER_TEMA[t].titol).join(' | '),
+            preguntes: selections.preguntes.join(' | '),
+            on: document.getElementById('p5_on').value.trim(),
+            quan: document.getElementById('p5_quan').value.trim(),
+            sorpresa: document.getElementById('p5_sorpresa').value.trim(),
+            diria: document.getElementById('p5_diria').value.trim()
+        };
+
+        let url = GOOGLE_FORM_URL + '?';
+        const params = [];
+        Object.keys(FORM_FIELDS).forEach(k => {
+            if (FORM_FIELDS[k] && dades[k]) {
+                params.push(FORM_FIELDS[k] + '=' + encodeURIComponent(dades[k]));
+            }
+        });
+        url += params.join('&');
+
+        window.open(url, '_blank');
+    }
+
+    updateProgress();
+</script>
+</body>
+</html>
